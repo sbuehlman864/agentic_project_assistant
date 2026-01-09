@@ -11,6 +11,7 @@ def write_markdown(path: str, text: str) -> None:
         path: File path where markdown will be written
         text: Markdown content to write
     """
+    out_dir = ensure_output_dir()
     with open(path, 'w', encoding='utf-8') as f:
         f.write(text)
 
@@ -23,6 +24,7 @@ def write_csv(path: str, rows: List[List[Any]]) -> None:
         path: File path where CSV will be written
         rows: List of rows, where each row is a list of values
     """
+    out_dir = ensure_output_dir()
     with open(path, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerows(rows)
@@ -36,7 +38,7 @@ def append_jsonl_log(event: Dict[str, Any], log_path: str = "events.jsonl") -> N
         event: Dictionary containing event data
         log_path: Path to the JSONL log file (default: "events.jsonl")
     """
-    
+    out_dir = ensure_output_dir()
     with open(log_path, 'a') as f:
         f.write(f'{json.dumps(event)}\n')
 
@@ -65,3 +67,6 @@ def render_prd(prd_obj: Dict[str, Any]) -> str:
     
     return result
 
+def ensure_output_dir() -> Path:
+    Path("output").mkdir(parents=True, exist_ok=True)
+    return Path("output")
