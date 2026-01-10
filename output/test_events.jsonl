@@ -1,0 +1,3 @@
+{"timestamp": "2026-01-09T10:00:00", "action": "user_login", "user": "alice", "status": "success"}
+{"timestamp": "2026-01-09T10:05:00", "action": "file_upload", "user": "alice", "filename": "data.csv"}
+{"timestamp": "2026-01-09T10:10:00", "action": "task_complete", "user": "alice", "task_id": 123}

@@ -1,0 +1,1 @@
+A budget tracker application where users can easily add transactions that are organized into categories. Users can then see visualizations of their spending and even ask an AI assistant for saving and spending recommendations.
