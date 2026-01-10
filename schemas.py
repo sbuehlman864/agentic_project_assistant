@@ -37,3 +37,16 @@ class Milestone(BaseModel):
 class MilestonesDoc(BaseModel):
     title: str
     milestones: List[Milestone] = Field(default_factory=list)
+
+class TaskItem(BaseModel):
+    task_id: str
+    title: str
+    type: str
+    priority: str
+    estimate_hours: float
+    depends_on: List[str] = Field(default_factory=list)
+    acceptance_criteria: List[str] = Field(default_factory=list)
+
+class TasksDoc(BaseModel):
+    title: str
+    tasks: List[TaskItem] = Field(default_factory=list)

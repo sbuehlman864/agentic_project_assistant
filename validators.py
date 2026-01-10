@@ -3,6 +3,10 @@ from __future__ import annotations
 from typing import List
 from schemas import PRD
 from schemas import MilestonesDoc
+from schemas import TasksDoc
+
+ALLOWED_TYPES = {"backend", "frontend", "data", "ml", "infra", "docs", "testing"}
+ALLOWED_PRIORITIES = {"P0", "P1", "P2"}
 
 def validate_prd(prd: PRD) -> List[str]:
     issues: List[str] = []
@@ -51,5 +55,52 @@ def validate_milestones(mdoc: MilestonesDoc) -> List[str]:
             issues.append(f"Milestone {idx} should have at least 2 deliverables.")
         if not (1 <= m.est_days <= 14):
             issues.append(f"Milestone {idx} est_days should be 1–14 for MVP solo scope, got {m.est_days}.")
+
+    return issues
+
+
+def validate_tasks(tdoc: TasksDoc) -> list[str]:
+    issues: list[str] = []
+
+    n = len(tdoc.tasks)
+    if not (20 <= n <= 45):
+        issues.append(f"tasks should be 20–45 items, got {n}.")
+
+    # task_id uniqueness
+    ids = [t.task_id for t in tdoc.tasks]
+    if len(set(ids)) != len(ids):
+        issues.append("task_id values are not unique.")
+
+    # basic field checks
+    for t in tdoc.tasks:
+        if not t.task_id.strip():
+            issues.append("A task has an empty task_id.")
+            break
+        if len(t.title.strip()) < 5:
+            issues.append(f"Task {t.task_id} title too short.")
+            break
+        if t.type not in ALLOWED_TYPES:
+            issues.append(f"Task {t.task_id} has invalid type '{t.type}'.")
+            break
+        if t.priority not in ALLOWED_PRIORITIES:
+            issues.append(f"Task {t.task_id} has invalid priority '{t.priority}'.")
+            break
+        if not (0.5 <= t.estimate_hours <= 24):
+            issues.append(f"Task {t.task_id} estimate_hours should be 0.5–24, got {t.estimate_hours}.")
+            break
+        if len(t.acceptance_criteria) < 1:
+            issues.append(f"Task {t.task_id} missing acceptance_criteria.")
+            break
+
+    # dependency correctness (depends_on must reference existing ids)
+    id_set = set(ids)
+    for t in tdoc.tasks:
+        for dep in t.depends_on:
+            if dep not in id_set:
+                issues.append(f"Task {t.task_id} depends_on unknown id '{dep}'.")
+                return issues
+            if dep == t.task_id:
+                issues.append(f"Task {t.task_id} depends on itself.")
+                return issues
 
     return issues

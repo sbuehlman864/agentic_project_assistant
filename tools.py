@@ -2,7 +2,7 @@ import csv
 import json
 from pathlib import Path
 from typing import List, Dict, Any
-from schemas import MilestonesDoc
+from schemas import PRD, MilestonesDoc, TasksDoc
 
 def write_markdown(path: str, text: str) -> None:
     """
@@ -29,6 +29,21 @@ def write_csv(path: str, rows: List[List[Any]]) -> None:
     with open(path, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerows(rows)
+
+def tasks_to_rows(tdoc: "TasksDoc") -> list[dict]:
+    rows = []
+    for t in tdoc.tasks:
+        rows.append({
+            "task_id": t.task_id,
+            "title": t.title,
+            "type": t.type,
+            "priority": t.priority,
+            "estimate_hours": t.estimate_hours,
+            "depends_on": ";".join(t.depends_on),
+            "acceptance_criteria": " | ".join(t.acceptance_criteria),
+        })
+    return rows
+
 
 
 def append_jsonl_log(event: Dict[str, Any], log_path: str = "events.jsonl") -> None:

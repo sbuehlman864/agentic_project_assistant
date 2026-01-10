@@ -1,37 +1,45 @@
-# Syllabus to Weekly Study Planner - Milestones (MVP)
+# Milestones for Syllabus to Weekly Planner MVP
 
-## M1. Foundation and Offline Scaffolding
-**Objective:** Establish project skeleton, offline-first data model, and core import plus initial 4-week plan generation.
-**Estimate:** 7 days
+## M1. Foundation and data model
+**Objective:** Establish the client-side app skeleton, core data models, and persistent storage to support multiple courses and manual syllabus entry.
+**Estimate:** 5 days
 **Deliverables:**
-- Project scaffolding and build setup with offline-first capability
-- Data model for syllabus, tasks, and progress stored in localStorage/IndexedDB
-- Plain-text syllabus import pipeline with basic parsing
-- Default 4-week plan generator and initial UI skeleton for weekly view
+- Project scaffold and single-page app shell with modular structure
+- Data models for Course and SyllabusItem defined in code
+- LocalStorage persistence layer with save/load functionality
+- Initial UI to create and list courses
 
-## M2. Plan Generation, Task Management, and Persistence
-**Objective:** Implement task lifecycle, per-week progress tracking, and dynamic plan regeneration when weeks change.
-**Estimate:** 12 days
-**Deliverables:**
-- CRUD for tasks with titles, due dates, and estimated effort
-- Weekly progress indicators and per-week task views
-- Regeneration on week count changes and autosave to browser storage
-- Basic in-app validation and error handling
-
-## M3. Export, Print, and Plan Sharing
-**Objective:** Add export in JSON/Markdown, printable view, and ensure offline sharing capability.
+## M2. Syllabus entry and week mapping
+**Objective:** Enable course creation with syllabus items and map items to calendar weeks to form an initial weekly plan.
 **Estimate:** 8 days
 **Deliverables:**
-- Export to JSON and Markdown formats
-- Printable view optimized for offline printing
-- Local backup/restore capabilities for saved plans
-- Option to reset data to initial state
+- UI forms to add syllabus items (title, week number, due date, description)
+- Logic to map syllabus items to weeks and generate weekly plan data
+- Validation and error handling for required fields
+- Automatic persistence of changes to localStorage
 
-## M4. UI Polish, Accessibility, and Onboarding
-**Objective:** Refine UI for desktop/mobile, accessibility, keyboard navigation, and onboarding plus reset option.
+## M3. Weekly planner view and progress tracking
+**Objective:** Provide a weekly view of tasks, allow completion tracking, and show progress per course.
+**Estimate:** 7 days
+**Deliverables:**
+- Weekly planner UI displaying tasks grouped by week
+- Task completion toggles and per-course progress calculation
+- Filter by course to view a specific plan
+- Auto-save of progress to localStorage
+
+## M4. Export/Import and duplication features
+**Objective:** Allow exporting and importing plans for backup/sharing, and duplicating courses to accelerate setup.
 **Estimate:** 6 days
 **Deliverables:**
-- Responsive weekly overview with clear task lists and progress bars
-- Keyboard navigable UI with improved color contrast (WCAG AA baseline)
-- Onboarding flow and contextual help
-- Clear data reset option and final QA checks
+- Export all courses/plans to JSON and CSV formats
+- Import from JSON/CSV to restore or upgrade plans
+- Duplicate course plan to quickly create a new course with the same structure
+
+## M5. Polish, accessibility, and offline readiness
+**Objective:** Improve accessibility, performance, and onboarding to ensure a smooth MVP experience.
+**Estimate:** 5 days
+**Deliverables:**
+- Accessibility improvements: keyboard navigation and ARIA labeling
+- Performance tuning to keep initial load fast (target under 2 seconds)
+- Onboarding flow or sample demo data to enable quick-start planning
+- UI polish and helpful microcopy to guide users
