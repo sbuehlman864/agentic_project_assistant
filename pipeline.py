@@ -6,7 +6,7 @@ from pathlib import Path
 # Add parent directory to path so we can import modules
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-import io, csv, json
+import io, csv, json, time
 from typing import Dict, Any, List
 
 from schemas import GoalInterpretation, PRD, MilestonesDoc, TasksDoc
@@ -17,22 +17,49 @@ from tools import render_prd_md, render_milestones_md, tasks_to_rows
 SYSTEM = "Return ONLY valid JSON. No markdown, no extra text."
 
 def run_pipeline(idea: str, constraints: List[str], max_attempts: int = 3) -> Dict[str, Any]:
+    start_time = time.time()
+    
     # 1) GoalInterpretation
     gi_prompt = f"""
 Return GoalInterpretation JSON with keys:
-title, one_liner, target_users, constraints, assumptions, success_metrics.
+- title (string)
+- one_liner (string)
+- target_users (array of strings)
+- constraints (array of strings)
+- assumptions (array of strings)
+- success_metrics (array of strings, NOT objects)
+
+Each success_metric should be a simple string describing the metric.
 
 Idea: {idea}
 Constraints: {json.dumps(constraints)}
+
+Example format:
+{{
+  "title": "Project Name",
+  "one_liner": "Brief description",
+  "target_users": ["User type 1", "User type 2"],
+  "constraints": ["Constraint 1", "Constraint 2"],
+  "assumptions": ["Assumption 1", "Assumption 2"],
+  "success_metrics": ["Metric 1: description", "Metric 2: description"]
+}}
 """
     gi_dict = call_llm_json(SYSTEM, gi_prompt)
     gi = GoalInterpretation.model_validate(gi_dict)
 
     # 2) PRD + revise loop
     prd_prompt = f"""
-Using this goal interpretation, return PRD JSON with keys:
-title, problem, target_users, goals, non_goals, user_stories,
-functional_requirements, nonfunctional_requirements, risks, open_questions.
+Using this goal interpretation, return PRD JSON with these exact keys:
+- title (string)
+- problem (string)
+- target_users (array of strings)
+- goals (array of strings)
+- non_goals (array of strings)
+- user_stories (array of strings, NOT objects - use format "As a [user], I want [goal] so that [benefit]")
+- functional_requirements (array of strings)
+- nonfunctional_requirements (array of strings)
+- risks (array of strings)
+- open_questions (array of strings)
 
 GoalInterpretation:
 {json.dumps(gi.model_dump(), indent=2)}
@@ -40,8 +67,9 @@ GoalInterpretation:
 Rules:
 - Provide 6–10 functional_requirements
 - Provide 4–8 nonfunctional_requirements
-- Provide 6–10 user_stories
+- Provide 6–10 user_stories as simple strings (e.g., "As a user, I want to add expenses so that I can track spending")
 - Keep scope MVP-realistic
+- All arrays must contain strings, NOT objects or nested structures
 """
     prd_dict = call_llm_json(SYSTEM, prd_prompt)
     prd_issues = []
@@ -151,6 +179,10 @@ Fix with minimal changes. Return corrected TasksDoc JSON ONLY.
         w.writerow(r)
     tasks_csv = output.getvalue()
 
+    # Calculate total execution time
+    end_time = time.time()
+    duration_seconds = end_time - start_time
+
     return {
         "goal": gi,
         "prd": prd,
@@ -159,6 +191,7 @@ Fix with minimal changes. Return corrected TasksDoc JSON ONLY.
         "prd_md": prd_md,
         "milestones_md": milestones_md,
         "tasks_csv": tasks_csv,
+        "duration_seconds": duration_seconds,
         "issues": {
             "prd": prd_issues,
             "milestones": m_issues,
