@@ -70,3 +70,71 @@ def render_prd(prd_obj: Dict[str, Any]) -> str:
 def ensure_output_dir() -> Path:
     Path("output").mkdir(parents=True, exist_ok=True)
     return Path("output")
+
+
+def render_prd_md(prd: "PRD") -> str:
+    """
+    Render a Product Requirements Document (PRD) object into a formatted Markdown string.
+
+    This function takes a PRD object and converts it into a well-structured Markdown document
+    with sections for problem statement, target users, goals, non-goals, user stories,
+    functional and non-functional requirements, risks, and open questions.
+
+    Args:
+        prd (PRD): A PRD object containing all the product requirements information.
+            Expected attributes:
+            - title (str): The title of the PRD
+            - problem (str): Description of the problem being solved
+            - target_users (list): List of target user descriptions
+            - goals (list): List of project goals
+            - non_goals (list): List of explicit non-goals
+            - user_stories (list): List of user stories
+            - functional_requirements (list): List of functional requirements
+            - nonfunctional_requirements (list): List of non-functional requirements
+            - risks (list): List of potential risks
+            - open_questions (list): List of unresolved questions
+
+    Returns:
+        str: A formatted Markdown string representing the complete PRD document.
+    """
+    def bullets(items):
+        """
+        Convert a list of items into Markdown bullet points.
+        
+        Args:
+            items: List of items to convert to bullet points
+            
+        Returns:
+            str: Markdown formatted bullet list, or "- (none)" if list is empty
+        """
+        return "\n".join(f"- {x}" for x in items) if items else "- (none)"
+
+    return f"""# {prd.title}
+
+## Problem
+{prd.problem}
+
+## Target users
+{bullets(prd.target_users)}
+
+## Goals
+{bullets(prd.goals)}
+
+## Non-goals
+{bullets(prd.non_goals)}
+
+## User stories
+{bullets(prd.user_stories)}
+
+## Functional requirements
+{bullets(prd.functional_requirements)}
+
+## Non-functional requirements
+{bullets(prd.nonfunctional_requirements)}
+
+## Risks
+{bullets(prd.risks)}
+
+## Open questions
+{bullets(prd.open_questions)}
+"""

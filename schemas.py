@@ -9,3 +9,20 @@ class GoalInterpretation(BaseModel):
     constraints: List[str] = Field(default_factory=list)
     assumptions: List[str] = Field(default_factory=list)
     success_metrics: List[str] = Field(default_factory=list)
+
+
+class PRD(BaseModel):
+    title: str
+    problem: str
+    target_users: List[str] = Field(default_factory=list)
+
+    goals: List[str] = Field(default_factory=list)
+    non_goals: List[str] = Field(default_factory=list)
+
+    user_stories: List[str] = Field(default_factory=list)
+
+    functional_requirements: List[str] = Field(default_factory=list)
+    nonfunctional_requirements: List[str] = Field(default_factory=list)
+
+    risks: List[str] = Field(default_factory=list)
+    open_questions: List[str] = Field(default_factory=list)
