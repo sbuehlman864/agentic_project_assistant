@@ -2,6 +2,7 @@ import csv
 import json
 from pathlib import Path
 from typing import List, Dict, Any
+from schemas import MilestonesDoc
 
 def write_markdown(path: str, text: str) -> None:
     """
@@ -138,3 +139,18 @@ def render_prd_md(prd: "PRD") -> str:
 ## Open questions
 {bullets(prd.open_questions)}
 """
+
+
+def render_milestones_md(mdoc: "MilestonesDoc") -> str:
+    lines = [f"# {mdoc.title}", ""]
+    for i, m in enumerate(mdoc.milestones, 1):
+        lines.append(f"## M{i}. {m.name}")
+        lines.append(f"**Objective:** {m.objective}")
+        lines.append(f"**Estimate:** {m.est_days} days")
+        lines.append("**Deliverables:**")
+        if m.deliverables:
+            lines.extend([f"- {d}" for d in m.deliverables])
+        else:
+            lines.append("- (none)")
+        lines.append("")
+    return "\n".join(lines)

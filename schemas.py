@@ -26,3 +26,14 @@ class PRD(BaseModel):
 
     risks: List[str] = Field(default_factory=list)
     open_questions: List[str] = Field(default_factory=list)
+
+
+class Milestone(BaseModel):
+    name: str
+    objective: str
+    deliverables: List[str] = Field(default_factory=list)
+    est_days: int
+
+class MilestonesDoc(BaseModel):
+    title: str
+    milestones: List[Milestone] = Field(default_factory=list)

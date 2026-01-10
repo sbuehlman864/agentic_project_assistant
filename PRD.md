@@ -1,69 +1,66 @@
-# Syllabus-to-Weekly Plan Planner
+# Syllabus to Weekly Study Planner
 
 ## Problem
-Students struggle to convert course syllabi into actionable weekly study plans. They need a lightweight, MVP-grade web app that can accept syllabus text, produce per-course weekly plans aligned to their available study hours, and track progress locally without external integrations.
+Many college syllabi are inconsistent in format and terminology, making it hard for students to translate requirements into actionable weekly tasks. Existing tools require manual planning, are often online-only, and do not meet the MVP constraint of being a demoable, offline-first local web app for a solo developer.
 
 ## Target users
-- College students (undergraduates) seeking structured study plans
-- Students juggling multiple courses who need a weekly roadmap
+- Undergraduate college students
+- Students juggling multiple courses
+- Self-motivated learners who prefer structured plans
 
 ## Goals
-- Convert syllabus text into weekly, course-specific study plans
-- Allow users to define weekly availability per course and generate feasible plans
-- Provide a simple, browsable view of weekly tasks per course across the semester
-- Track progress locally (task completion) and display completion metrics
-- Deliver a demoable MVP within 2 weeks that runs entirely in the browser
-- Avoid any external integrations or server dependencies in v1
-- Persist user data locally (in-browser) between sessions
+- Convert syllabus content into a structured weekly study plan with tasks, due dates, and estimated effort.
+- Operate offline-first with data stored locally in the browser (no server required).
+- Provide a clear weekly overview and progress tracking for adherence.
+- Enable quick MVP generation (default 4 weeks) with the ability to adjust weeks and re-generate.
+- Support local export/print options for offline use and sharing.
 
 ## Non-goals
-- Calendar integrations (Google/ICS) or external syncing
-- Server-side hosting or multi-user authentication
-- Advanced analytics or predictive scheduling beyond simple hour-based allocation
-- LMS integrations, assignment submission tracking, or grade calculations
-- Mobile app edition or iOS/Android-native features
+- Real-time collaboration or multi-user features
+- Cloud sync or LMS integrations in v1
+- Advanced analytics or learning insights beyond basic completion metrics
+- Complex PDF/image syllabus parsing or OCR in v1
+- Mobile app native experiences or push notifications
 
 ## User stories
-- As a student, I want to paste a syllabus text for a course so the app can extract topics and create a plan scaffold.
-- As a student, I want to add multiple courses with names and their total weeks, so I can plan across a semester.
-- As a student, I want to specify my weekly study hours per course, so tasks are allocated to realistic time blocks.
-- As a student, I want the app to generate a week-by-week plan for each course based on topics and available hours.
-- As a student, I want to view a dashboard that shows weekly tasks for each course in a single glance.
-- As a student, I want to mark tasks as completed and see progress percentages to stay motivated.
-- As a student, I want to edit or reallocate tasks when my schedule changes, without losing data.
-- As a student, I want to export or print my current weekly plan for offline reference.
-- As a student, I want my data saved locally so it persists across browser sessions.
+- As a student, I want to paste or paste/upload a syllabus text and have the app create a structured plan, so I don't have to manually interpret the syllabus.
+- As a student, I want the app to distribute tasks across weeks by default (4 weeks) with due dates, so I have a ready plan.
+- As a student, I want to see a weekly overview with tasks, due dates, and estimated hours, so I can plan my study time.
+- As a student, I want to mark tasks as completed and see progress, so I can stay motivated.
+- As a student, I want to adjust the number of weeks and re-generate the plan, so I can tailor to my schedule.
+- As a student, I want to customize tasks by editing titles, due dates, and estimated effort, so the plan matches my needs.
+- As a student, I want to save plans locally and reopen them later without internet, so I can continue offline.
+- As a student, I want to export the plan as JSON/Markdown/printable view, so I can share or print.
+- As a student, I want a simple, clean UI that works on desktop and mobile, so I can use it anywhere.
 
 ## Functional requirements
-- Allow per-course setup: course name, number of weeks, and optional syllabus text input
-- Accept syllabus text input for each course and perform lightweight parsing to extract topics or modules
-- Provide a planning engine that assigns topics to weeks based on user-entered weekly hours and a simple rule set
-- Offer an editable weekly view where users can adjust tasks, estimated hours, and week assignment
-- Provide progress tracking: mark tasks complete, calculate completion rate per course and overall
-- Implement local data persistence using browser storage (localStorage or equivalent) with data schema for courses, weeks, tasks, and progress
-- Present an overview dashboard and per-course weekly breakdown views in a responsive UI
-- Support data export (JSON or printable text) and data import for restoration
-- Operate entirely client-side with no external network requests or integrations
+- Import: Support copy-paste or file upload of plain-text syllabus; parse into a structured syllabus object.
+- Plan generation: Generate a weekly plan by distributing syllabus items across weeks (default 4 weeks); allow user to set number of weeks and regenerate.
+- Task management: Create, edit, and delete tasks; mark tasks as completed; track per-week and overall progress.
+- Editing capabilities: Allow editing of task titles, due dates, and estimated effort; adjust week allocations manually if needed.
+- Local storage: Persist syllabus, tasks, and progress to browser storage (localStorage or IndexedDB) with autosave.
+- Export/print: Provide options to export the plan as JSON, Markdown, or a printable view; support offline viewing.
+- UI/UX: Present a weekly view with clear task lists, progress indicators, and responsive design for desktop and mobile.
+- Reset: Provide a clear data reset option to start over from the initial state.
 
 ## Non-functional requirements
-- Performance: initial plan generation should complete within a few seconds on a modern browser
-- Reliability: works offline and persists data across sessions without server interaction
-- Usability: simple, clean UI with intuitive onboarding and minimal learning curve
-- Accessibility: keyboard-navigable controls and proper ARIA labels; color contrasts for readability
-- Compatibility: supported in major desktop browsers (Chrome, Firefox, Safari, Edge) with responsive layout
-- Security/Privacy: no data leaves the user’s device; clearly communicate local storage usage
+- Offline-first: All data remains stored and operable entirely in the browser with no server interactions.
+- Performance: Generate a 4-week plan from typical syllabi within 2 seconds on standard hardware; scale gracefully with up to ~100 tasks.
+- Accessibility: Keyboard navigable, proper semantic structure, and adequate color contrast to meet WCAG 2.1 AA baseline.
+- Cross-browser compatibility: Works on modern Chrome, Firefox, Safari, and Edge without relying on vendor-specific APIs.
+- Security and privacy: No data is sent to external services; user data is stored locally and never transmitted by default.
+- Usability: Minimal onboarding, clear success metrics, and intuitive controls to reduce setup time.
 
 ## Risks
-- Syllabus parsing accuracy: heterogeneity of syllabus formats may hinder automatic topic extraction
-- Scope creep: risk of adding features beyond MVP (calendar sync, LMS integration)
-- Performance with large syllabi or long-term plans could degrade if not optimized
-- User adoption: students may prefer existing tools or require a more guided experience
-- Data loss risk if localStorage capacity is exceeded or users clear data unintentionally
+- Ambiguity in syllabus formatting may lead to incorrect automatic task extraction or misalignment of weeks.
+- LocalStorage quota limits or browser storage clears can result in data loss for users with large syllabi.
+- Performance degradation with unusually long or complex syllabi or very large task sets.
+- Users may expect features (e.g., calendar integrations) that are outside v1 scope, causing misaligned expectations.
+- If parsing relies on heuristic text extraction, edge cases could require manual correction, affecting MVP appeal.
 
 ## Open questions
-- What is the minimum viable syllabus parsing approach (manual mapping vs. auto-extraction) and how will users correct parsing errors?
-- How many weeks should the MVP assume by default, and how should it handle non-standard semester lengths (14 vs 15 weeks)?
-- What rules will the planning engine use to allocate topics to weeks (e.g., even distribution, priority-based, or time-block based)?
-- Should the export format include a human-readable printable view, or only machine-friendly JSON, or both?
-- How will the UI scale when handling 2-4 courses simultaneously, and is a per-course toggle preferred for initial MVP?
-- What accessibility and localization considerations should be included from the start (labels, date formats, etc.)?
+- What is the minimum viable default parsing rule set for common syllabus formats, and should we define a supported template to reduce ambiguity?
+- How should we handle estimation of effort for tasks when the syllabus does not specify hours per week?
+- Should the app automatically accommodate holidays or term breaks when distributing tasks across weeks?
+- Is there value in supporting additional import formats (e.g., CSV or Markdown syllabus templates) in v1 or should we limit to plain text?
+- What is the preferred export format for sharing with others (JSON, Markdown, or printable PDF) given MVP constraints?

@@ -2,6 +2,7 @@
 from __future__ import annotations
 from typing import List
 from schemas import PRD
+from schemas import MilestonesDoc
 
 def validate_prd(prd: PRD) -> List[str]:
     issues: List[str] = []
@@ -28,5 +29,27 @@ def validate_prd(prd: PRD) -> List[str]:
         issues.append("goals should have at least 3 items.")
     if len(prd.non_goals) < 2:
         issues.append("non_goals should have at least 2 items.")
+
+    return issues
+
+
+def validate_milestones(mdoc: MilestonesDoc) -> List[str]:
+    issues: List[str] = []
+
+    if not mdoc.title.strip():
+        issues.append("Milestones title is empty.")
+
+    if not (3 <= len(mdoc.milestones) <= 6):
+        issues.append(f"milestones should be 3–6 items, got {len(mdoc.milestones)}.")
+
+    for idx, m in enumerate(mdoc.milestones, 1):
+        if len(m.name.strip()) < 3:
+            issues.append(f"Milestone {idx} has a very short name.")
+        if len(m.objective.strip()) < 20:
+            issues.append(f"Milestone {idx} objective is too short.")
+        if len(m.deliverables) < 2:
+            issues.append(f"Milestone {idx} should have at least 2 deliverables.")
+        if not (1 <= m.est_days <= 14):
+            issues.append(f"Milestone {idx} est_days should be 1–14 for MVP solo scope, got {m.est_days}.")
 
     return issues
